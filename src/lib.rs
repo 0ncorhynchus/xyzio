@@ -8,13 +8,19 @@ pub type Snapshot = (String, Vec<XYZLine>);
 
 #[derive(Debug)]
 pub enum XYZError {
-    Parse(num::ParseFloatError),
+    ParseError(num::ParseFloatError),
+}
+
+impl From<num::ParseFloatError> for XYZError {
+    fn from(err: num::ParseFloatError) -> XYZError {
+        XYZError::ParseError(err)
+    }
 }
 
 pub fn parse_coord(x: &str, y: &str, z: &str) -> Result<Coordinate, XYZError> {
-    let vec_x = try!(x.parse::<f32>().map_err(XYZError::Parse));
-    let vec_y = try!(y.parse::<f32>().map_err(XYZError::Parse));
-    let vec_z = try!(z.parse::<f32>().map_err(XYZError::Parse));
+    let vec_x = try!(x.parse::<f32>());
+    let vec_y = try!(y.parse::<f32>());
+    let vec_z = try!(z.parse::<f32>());
 
     Ok((vec_x, vec_y, vec_z))
 }
