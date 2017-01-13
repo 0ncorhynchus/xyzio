@@ -7,18 +7,9 @@ pub type XYZLine = (String, Coordinate);
 pub type Snapshot = (String, Vec<XYZLine>);
 
 pub fn parse_coord(x: &str, y: &str, z: &str) -> Result<Coordinate, ParseFloatError> {
-    let vec_x = match x.parse::<f32>() {
-        Ok(value) => value,
-        Err(err) => return Err(err)
-    };
-    let vec_y = match y.parse::<f32>() {
-        Ok(value) => value,
-        Err(err) => return Err(err)
-    };
-    let vec_z = match z.parse::<f32>() {
-        Ok(value) => value,
-        Err(err) => return Err(err)
-    };
+    let vec_x = try!(x.parse::<f32>());
+    let vec_y = try!(y.parse::<f32>());
+    let vec_z = try!(z.parse::<f32>());
 
     Ok((vec_x, vec_y, vec_z))
 }
