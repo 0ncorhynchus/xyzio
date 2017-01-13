@@ -2,7 +2,18 @@
 // use std::str::FromStr;
 use std::num;
 
-pub type Coordinate = (f32, f32, f32);
+pub struct Coordinate {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32
+}
+
+impl Coordinate {
+    fn new(x: f32, y: f32, z: f32) -> Coordinate {
+        Coordinate{ x: x, y: y, z: z }
+    }
+}
+
 pub type XYZLine = (String, Coordinate);
 pub type Snapshot = (String, Vec<XYZLine>);
 
@@ -17,12 +28,12 @@ impl From<num::ParseFloatError> for XYZError {
     }
 }
 
-pub fn parse_coord(x: &str, y: &str, z: &str) -> Result<Coordinate, XYZError> {
-    let vec_x = try!(x.parse::<f32>());
-    let vec_y = try!(y.parse::<f32>());
-    let vec_z = try!(z.parse::<f32>());
+pub fn parse_coord(x_str: &str, y_str: &str, z_str: &str) -> Result<Coordinate, XYZError> {
+    let x = try!(x_str.parse::<f32>());
+    let y = try!(y_str.parse::<f32>());
+    let z = try!(z_str.parse::<f32>());
 
-    Ok((vec_x, vec_y, vec_z))
+    Ok(Coordinate::new(x,y,z))
 }
 
 // fn read_xyz_line<R: io::BufRead>(reader: &mut R) -> Option<XYZLine> {
