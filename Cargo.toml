@@ -1,0 +1,6 @@
+[package]
+name = "xyzio"
+version = "0.1.0"
+authors = ["Suguru Kato <salmon.bioinformatics@gmail.com>"]
+
+[dependencies]
