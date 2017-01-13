@@ -1,15 +1,20 @@
 // use std::io;
 // use std::str::FromStr;
-use std::num::ParseFloatError;
+use std::num;
 
 pub type Coordinate = (f32, f32, f32);
 pub type XYZLine = (String, Coordinate);
 pub type Snapshot = (String, Vec<XYZLine>);
 
-pub fn parse_coord(x: &str, y: &str, z: &str) -> Result<Coordinate, ParseFloatError> {
-    let vec_x = try!(x.parse::<f32>());
-    let vec_y = try!(y.parse::<f32>());
-    let vec_z = try!(z.parse::<f32>());
+#[derive(Debug)]
+pub enum XYZError {
+    Parse(num::ParseFloatError),
+}
+
+pub fn parse_coord(x: &str, y: &str, z: &str) -> Result<Coordinate, XYZError> {
+    let vec_x = try!(x.parse::<f32>().map_err(XYZError::Parse));
+    let vec_y = try!(y.parse::<f32>().map_err(XYZError::Parse));
+    let vec_z = try!(z.parse::<f32>().map_err(XYZError::Parse));
 
     Ok((vec_x, vec_y, vec_z))
 }
