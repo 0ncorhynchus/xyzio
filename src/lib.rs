@@ -1,6 +1,25 @@
 use std::io;
-// use std::str::FromStr;
 use std::num;
+use std::str::FromStr;
+
+#[derive(Debug)]
+pub enum XYZError {
+    IO(io::Error),
+    IllegalState(String),
+    Parse(num::ParseFloatError),
+}
+
+impl From<io::Error> for XYZError {
+    fn from(err: io::Error) -> XYZError {
+        XYZError::IO(err)
+    }
+}
+
+impl From<num::ParseFloatError> for XYZError {
+    fn from(err: num::ParseFloatError) -> XYZError {
+        XYZError::Parse(err)
+    }
+}
 
 pub struct Coordinate {
     pub x: f32,
@@ -9,24 +28,36 @@ pub struct Coordinate {
 }
 
 impl Coordinate {
-    fn new(x: f32, y: f32, z: f32) -> Coordinate {
+    fn new(x: f32, y: f32, z: f32) -> Self {
         Coordinate{ x: x, y: y, z: z }
     }
 }
 
-pub type XYZLine = (String, Coordinate);
-pub type Snapshot = (String, Vec<XYZLine>);
-
-#[derive(Debug)]
-pub enum XYZError {
-    ParseError(num::ParseFloatError),
+pub struct Atom {
+    pub serial: String,
+    pub coordinate: Coordinate
 }
 
-impl From<num::ParseFloatError> for XYZError {
-    fn from(err: num::ParseFloatError) -> XYZError {
-        XYZError::ParseError(err)
+impl Atom {
+    fn new(serial: &str, coordinate: Coordinate) -> Self {
+        Atom{ serial: String::from(serial), coordinate: coordinate }
     }
 }
+
+impl FromStr for Atom {
+    type Err = XYZError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let splitted: Vec<&str> = s.split_whitespace().collect();
+        if splitted.len() != 4 {
+            return Err(XYZError::IllegalState(String::from("")));
+        }
+        let coordinate = try!(parse_coord(splitted[1], splitted[2], splitted[3]));
+        Ok(Atom::new(splitted[0], coordinate))
+    }
+}
+
+pub type Snapshot = (String, Vec<Atom>);
 
 fn parse_coord(x_str: &str, y_str: &str, z_str: &str) -> Result<Coordinate, XYZError> {
     let x = try!(x_str.parse::<f32>());
@@ -36,21 +67,13 @@ fn parse_coord(x_str: &str, y_str: &str, z_str: &str) -> Result<Coordinate, XYZE
     Ok(Coordinate::new(x,y,z))
 }
 
-pub fn read_xyz_line<R: io::BufRead>(reader: &mut R) -> Option<XYZLine> {
+pub fn read_xyz_line<R: io::BufRead>(reader: &mut R) -> Result<Atom, XYZError> {
     let mut buffer = String::new();
     try!(reader.read_line(&mut buffer));
-    let splited: Vec<&str> = buffer.split_whitespace().collect();
-    if splited.len() == 4 {
-        Some(
-            (String::from(splited[0]),
-            parse_coord(splited[1], splited[2], splited[3]))
-            )
-    } else {
-        None
-    }
+    buffer.parse::<Atom>()
 }
 
-// fn collect_xyz<R: io::BufRead>(reader: &mut R, num: i32) -> Vec<XYZLine> {
+// fn collect_xyz<R: io::BufRead>(reader: &mut R, num: i32) -> Result<Vec<Atom>, XYZError> {
 //     let mut vec = Vec::new();
 //     for _ in 0..num {
 //         match read_xyz_line(reader) {
