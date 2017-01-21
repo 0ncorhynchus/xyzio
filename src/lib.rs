@@ -21,6 +21,7 @@ impl From<num::ParseFloatError> for XYZError {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Coordinate {
     pub x: f32,
     pub y: f32,
@@ -33,6 +34,7 @@ impl Coordinate {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Atom {
     pub serial: String,
     pub coordinate: Coordinate
@@ -94,7 +96,17 @@ pub fn read_xyz_line<R: io::BufRead>(reader: &mut R) -> Result<Atom, XYZError> {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
-    fn it_works() {
+    fn test_parse_atom() {
+        let success = "C 10.0 11.0 12.0".parse::<Atom>();
+        assert!(success.is_ok());
+        assert_eq!(
+            Atom::new("C", Coordinate::new(10.0, 11.0, 12.0)),
+            success.unwrap());
+
+        let failure = "C 1.0 2.0 a".parse::<Atom>();
+        assert!(failure.is_err());
     }
 }
