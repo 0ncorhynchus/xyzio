@@ -1,7 +1,7 @@
 use std::str::FromStr;
 use error::*;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Coordinate {
     pub x: f32,
     pub y: f32,
