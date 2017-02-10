@@ -14,7 +14,7 @@ impl Coordinate {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Atom {
     pub element: String,
     pub coordinate: Coordinate
@@ -49,6 +49,12 @@ pub struct Snapshot {
     pub atoms: Vec<Atom>
 }
 
+impl Snapshot {
+    pub fn size(&self) -> usize {
+        self.atoms.len()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -63,6 +69,26 @@ mod tests {
 
         let failure = "C 1.0 2.0 a".parse::<Atom>();
         assert!(failure.is_err());
+    }
+
+    #[test]
+    fn test_snapshot() {
+        let snapshot = Snapshot {
+            comment: "This is a comment".to_string(),
+            atoms: vec![
+                Atom::new("C", 10.0, 11.0, 12.0),
+                Atom::new("O",  8.4, 12.8,  5.0),
+                Atom::new("H", 23.0,  9.0, 11.8),
+            ]
+        };
+        assert_eq!(3, snapshot.size());
+        assert_eq!("This is a comment".to_string(), snapshot.comment);
+        assert_eq!(Atom::new("C", 10.0, 11.0, 12.0),
+                   snapshot.atoms[0]);
+        assert_eq!(Atom::new("O",  8.4, 12.8,  5.0),
+                   snapshot.atoms[1]);
+        assert_eq!(Atom::new("H", 23.0,  9.0, 11.8),
+                   snapshot.atoms[2]);
     }
 }
 
