@@ -82,7 +82,7 @@ mod tests {
             ]
         };
         assert_eq!(3, snapshot.size());
-        assert_eq!("This is a comment".to_string(), snapshot.comment);
+        assert_eq!("This is a comment", snapshot.comment);
         assert_eq!(Atom::new("C", 10.0, 11.0, 12.0),
                    snapshot.atoms[0]);
         assert_eq!(Atom::new("O",  8.4, 12.8,  5.0),
