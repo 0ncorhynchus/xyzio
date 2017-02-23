@@ -2,6 +2,7 @@
 name = "xyzio"
 version = "0.1.0"
 authors = ["Suguru Kato <salmon.bioinformatics@gmail.com>"]
+description = "An simple xyz reader"
 license = "MIT"
 license-file = "LICENSE"
 
