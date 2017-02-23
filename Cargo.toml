@@ -3,6 +3,6 @@ name = "xyzio"
 version = "0.2.0"
 authors = ["Suguru Kato <salmon.bioinformatics@gmail.com>"]
 description = "A simple xyz reader"
-license-file = "LICENSE"
+license = "MIT"
 
 [dependencies]
