@@ -10,4 +10,4 @@ repository = "https://github.com/0ncorhynchus/xyzio"
 travis-ci = { repository = "0ncorhynchus/xyzio", branch = "master" }
 
 [features]
-double_precision =[]
+double_precision = []
