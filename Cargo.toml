@@ -4,5 +4,10 @@ version = "0.2.0"
 authors = ["Suguru Kato <salmon.bioinformatics@gmail.com>"]
 description = "A simple xyz reader"
 license = "MIT"
+repository = "0ncorhynchus/xyzio"
+
+[badges]
+
+travis-ci = { repository = "0ncorhynchus/xyzio", branch = "master" }
 
 [dependencies]
