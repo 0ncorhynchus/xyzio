@@ -7,7 +7,7 @@ use xyzio::{Atom, Reader};
 fn test_read_ferric_oxide() {
     let input = File::open("xyz/ferric_oxide.xyz").unwrap();
     let mut reader = Reader::new(input);
-    let result = reader.next_snapshot();
+    let result = reader.read_snapshot();
     assert!(result.is_ok());
     let snapshot = result.unwrap();
     assert_eq!(5, snapshot.size());
