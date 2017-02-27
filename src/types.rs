@@ -1,18 +1,8 @@
 use std::str::FromStr;
 use error::*;
 
-#[derive(Debug, PartialEq, Clone, Copy)]
-pub struct Coordinate {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32
-}
-
-impl Coordinate {
-    fn new(x: f32, y: f32, z: f32) -> Self {
-        Coordinate{ x: x, y: y, z: z }
-    }
-}
+type Real = f32;
+pub type Coordinate = (Real, Real, Real);
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Atom {
@@ -21,10 +11,10 @@ pub struct Atom {
 }
 
 impl Atom {
-    fn new(element: &str, x: f32, y: f32, z: f32) -> Self {
+    fn new(element: &str, x: Real, y: Real, z: Real) -> Self {
         Atom {
             element: element.to_string(),
-            coordinate: Coordinate::new(x,y,z)
+            coordinate: (x, y, z)
         }
     }
 }
@@ -38,9 +28,9 @@ impl FromStr for Atom {
             return Err(Error::IllegalState(String::from("")));
         }
         Ok(Atom::new(splitted[0],
-                     splitted[1].parse::<f32>()?,
-                     splitted[2].parse::<f32>()?,
-                     splitted[3].parse::<f32>()?))
+                     splitted[1].parse::<Real>()?,
+                     splitted[2].parse::<Real>()?,
+                     splitted[3].parse::<Real>()?))
     }
 }
 
