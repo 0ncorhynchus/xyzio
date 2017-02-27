@@ -1,23 +1,23 @@
 use std::str::FromStr;
 use error::*;
 
-type Real = f32;
+pub type Real = f32;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Atom {
     pub element: String,
     pub x: Real,
     pub y: Real,
-    pub z: Real
+    pub z: Real,
 }
 
 impl Atom {
-    fn new(element: &str, x: Real, y: Real, z: Real) -> Self {
+    pub fn new(element: &str, x: Real, y: Real, z: Real) -> Self {
         Atom {
             element: element.to_string(),
             x: x,
             y: y,
-            z: z
+            z: z,
         }
     }
 }
