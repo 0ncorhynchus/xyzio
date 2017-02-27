@@ -7,5 +7,5 @@ pub use error::*;
 pub use types::Atom;
 pub use types::Snapshot;
 
-pub use reader::*;
+pub use reader::Reader;
 

@@ -29,7 +29,7 @@ impl<R: io::Read> Reader<R> {
         }
     }
 
-    pub fn snapshot(&mut self) -> Result<Snapshot> {
+    pub fn next_snapshot(&mut self) -> Result<Snapshot> {
         let reader = &mut self.reader;
 
         let num_atoms = parse_line!(reader, i32);
@@ -51,7 +51,7 @@ impl<R: io::Read> Iterator for Reader<R> {
     type Item = Snapshot;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.snapshot().ok()
+        self.next_snapshot().ok()
     }
 }
 
@@ -68,7 +68,7 @@ mod tests {
             O 4.0 3.0 6.0
             H 5.0 1.5 4.0";
         let mut reader = Reader::new(data);
-        let success = reader.snapshot();
+        let success = reader.next_snapshot();
         assert!(success.is_ok());
 
         let snapshot = success.unwrap();
