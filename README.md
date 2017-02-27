@@ -1,6 +1,6 @@
 # xyzio
 
-[![Build Status](https://travis-ci.org/0ncorhynchus/rust_xyz.svg?branch=master)](https://travis-ci.org/0ncorhynchus/rust_xyz)
+[![Build Status](https://travis-ci.org/0ncorhynchus/xyzio.svg?branch=master)](https://travis-ci.org/0ncorhynchus/xyzio)
 
 This library gives the way to access a xyz file.
 
