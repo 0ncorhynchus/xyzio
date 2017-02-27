@@ -4,6 +4,12 @@ rust:
   - stable
   - beta
   - nightly
+env:
+  - OPTS=
+  - OPTS=--features=double_precision
 matrix:
   allow_failures:
     - rust: nightly
+script:
+  - cargo build --verbose ${OPTS}
+  - cargo test --verbose
