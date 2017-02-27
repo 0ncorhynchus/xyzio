@@ -2,19 +2,22 @@ use std::str::FromStr;
 use error::*;
 
 type Real = f32;
-pub type Coordinate = (Real, Real, Real);
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Atom {
     pub element: String,
-    pub coordinate: Coordinate
+    pub x: Real,
+    pub y: Real,
+    pub z: Real
 }
 
 impl Atom {
     fn new(element: &str, x: Real, y: Real, z: Real) -> Self {
         Atom {
             element: element.to_string(),
-            coordinate: (x, y, z)
+            x: x,
+            y: y,
+            z: z
         }
     }
 }
