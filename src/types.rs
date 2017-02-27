@@ -1,4 +1,5 @@
 use std::str::FromStr;
+use std::string::ToString;
 use error::*;
 
 pub type Real = f32;
@@ -37,6 +38,18 @@ impl FromStr for Atom {
     }
 }
 
+impl ToString for Atom {
+    fn to_string(&self) -> String {
+        let string_list = vec![
+            self.element.clone(),
+            self.x.to_string(),
+            self.y.to_string(),
+            self.z.to_string(),
+        ];
+        string_list.join(" ")
+    }
+}
+
 pub struct Snapshot {
     pub comment: String,
     pub atoms: Vec<Atom>
@@ -62,6 +75,12 @@ mod tests {
 
         let failure = "C 1.0 2.0 a".parse::<Atom>();
         assert!(failure.is_err());
+    }
+
+    #[test]
+    fn test_atom_to_string() {
+        let atom = Atom::new("C", 11.2, 8.5, 14.8);
+        assert_eq!("C 11.2 8.5 14.8", atom.to_string());
     }
 
     #[test]
