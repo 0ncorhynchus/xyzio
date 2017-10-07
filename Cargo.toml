@@ -2,12 +2,16 @@
 name = "xyzio"
 version = "0.3.0"
 authors = ["Suguru Kato <salmon.bioinformatics@gmail.com>"]
-description = "A simple xyz reader"
-license = "MIT"
+
+description = "A simple xyz reader and writer library"
+documentation = "https://docs.rs/xyzio/0.3.0/xyzio"
 repository = "https://github.com/0ncorhynchus/xyzio"
+readme = "README.md"
+
+license = "MIT"
 
 [badges]
 travis-ci = { repository = "0ncorhynchus/xyzio", branch = "master" }
 
 [features]
-double_precision =[]
+double_precision = []
