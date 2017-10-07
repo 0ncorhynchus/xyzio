@@ -35,9 +35,9 @@ impl FromStr for Atom {
             return Err(Error::IllegalState(String::from("")));
         }
         Ok(Atom::new(splitted[0],
-                     splitted[1].parse::<Real>()?,
-                     splitted[2].parse::<Real>()?,
-                     splitted[3].parse::<Real>()?))
+                     splitted[1].parse()?,
+                     splitted[2].parse()?,
+                     splitted[3].parse()?))
     }
 }
 
@@ -70,13 +70,13 @@ mod tests {
 
     #[test]
     fn test_parse_atom() {
-        let success = "C 10.0 11.0 12.0".parse::<Atom>();
+        let success: Atom = "C 10.0 11.0 12.0".parse();
         assert!(success.is_ok());
         assert_eq!(
             Atom::new("C", 10.0, 11.0, 12.0),
             success.unwrap());
 
-        let failure = "C 1.0 2.0 a".parse::<Atom>();
+        let failure: Atom = "C 1.0 2.0 a".parse();
         assert!(failure.is_err());
     }
 
