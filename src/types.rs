@@ -67,11 +67,11 @@ mod tests {
 
     #[test]
     fn test_parse_atom() {
-        let success: Atom = "C 10.0 11.0 12.0".parse();
+        let success = "C 10.0 11.0 12.0".parse();
         assert!(success.is_ok());
         assert_eq!(Atom::new("C", 10.0, 11.0, 12.0), success.unwrap());
 
-        let failure: Atom = "C 1.0 2.0 a".parse();
+        let failure: Result<Atom<f64>> = "C 1.0 2.0 a".parse();
         assert!(failure.is_err());
     }
 

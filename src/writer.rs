@@ -29,7 +29,6 @@ impl<R: io::Write> Writer<R> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use types::*;
 
     #[test]
     fn test_write() {

@@ -70,7 +70,7 @@ mod tests {
             O 4.0 3.0 6.0
             H 5.0 1.5 4.0";
         let mut reader = Reader::new(data);
-        let success = reader.read_snapshot();
+        let success = reader.read_snapshot::<f64>();
         assert!(success.is_ok());
 
         let snapshot = success.unwrap();
