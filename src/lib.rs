@@ -1,6 +1,6 @@
 mod error;
-mod types;
 mod reader;
+mod types;
 mod writer;
 
 pub use error::*;

@@ -5,14 +5,14 @@ use std::result;
 #[derive(Debug)]
 pub enum ParseError {
     Integer(num::ParseIntError),
-    Float(num::ParseFloatError)
+    Float(num::ParseFloatError),
 }
 
 #[derive(Debug)]
 pub enum Error {
     IO(io::Error),
     IllegalState(String),
-    Parse(ParseError)
+    Parse(ParseError),
 }
 
 impl From<io::Error> for Error {
@@ -34,4 +34,3 @@ impl From<num::ParseFloatError> for Error {
 }
 
 pub type Result<T> = result::Result<T, Error>;
-

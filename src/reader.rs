@@ -19,13 +19,13 @@ macro_rules! parse_line {
         let mut buffer = String::new();
         $reader.read_line(&mut buffer)?;
         buffer.trim().parse::<$t>()?
-    }}
+    }};
 }
 
 impl<R: io::Read> Reader<R> {
     pub fn new(inner: R) -> Self {
         Reader {
-            reader: io::BufReader::new(inner)
+            reader: io::BufReader::new(inner),
         }
     }
 
@@ -42,7 +42,7 @@ impl<R: io::Read> Reader<R> {
 
         Ok(Snapshot {
             comment: comment,
-            atoms: atoms
+            atoms: atoms,
         })
     }
 }
