@@ -12,7 +12,7 @@ impl<R: io::Write> Writer<R> {
         Writer { buffer: inner }
     }
 
-    pub fn write_snapshot(&mut self, snapshot: &Snapshot) -> Result<()> {
+    pub fn write_snapshot<T: ToString>(&mut self, snapshot: &Snapshot<T>) -> Result<()> {
         self.buffer.write(snapshot.size().to_string().as_bytes())?;
         self.buffer.write(b"\n")?;
         self.buffer.write(snapshot.comment.as_bytes())?;

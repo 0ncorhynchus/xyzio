@@ -2,21 +2,16 @@ use error::*;
 use std::str::FromStr;
 use std::string::ToString;
 
-#[cfg(not(feature = "double_precision"))]
-pub type Real = f32;
-#[cfg(feature = "double_precision")]
-pub type Real = f64;
-
 #[derive(Debug, PartialEq, Clone)]
-pub struct Atom {
+pub struct Atom<T> {
     pub element: String,
-    pub x: Real,
-    pub y: Real,
-    pub z: Real,
+    pub x: T,
+    pub y: T,
+    pub z: T,
 }
 
-impl Atom {
-    pub fn new(element: &str, x: Real, y: Real, z: Real) -> Self {
+impl<T> Atom<T> {
+    pub fn new(element: &str, x: T, y: T, z: T) -> Self {
         Atom {
             element: element.to_string(),
             x: x,
@@ -26,7 +21,7 @@ impl Atom {
     }
 }
 
-impl FromStr for Atom {
+impl<T: FromStr<Err = std::num::ParseFloatError>> FromStr for Atom<T> {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self> {
@@ -43,7 +38,7 @@ impl FromStr for Atom {
     }
 }
 
-impl ToString for Atom {
+impl<T: ToString> ToString for Atom<T> {
     fn to_string(&self) -> String {
         let string_list = vec![
             self.element.clone(),
@@ -55,12 +50,12 @@ impl ToString for Atom {
     }
 }
 
-pub struct Snapshot {
+pub struct Snapshot<T> {
     pub comment: String,
-    pub atoms: Vec<Atom>,
+    pub atoms: Vec<Atom<T>>,
 }
 
-impl Snapshot {
+impl<T> Snapshot<T> {
     pub fn size(&self) -> usize {
         self.atoms.len()
     }

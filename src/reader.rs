@@ -29,15 +29,17 @@ impl<R: io::Read> Reader<R> {
         }
     }
 
-    pub fn read_snapshot(&mut self) -> Result<Snapshot> {
+    pub fn read_snapshot<T: std::str::FromStr<Err = std::num::ParseFloatError>>(
+        &mut self,
+    ) -> Result<Snapshot<T>> {
         let reader = &mut self.reader;
 
         let num_atoms = parse_line!(reader, i32);
         let comment = parse_line!(reader);
 
-        let mut atoms: Vec<Atom> = Vec::new();
+        let mut atoms: Vec<Atom<T>> = Vec::new();
         for _ in 0..num_atoms {
-            atoms.push(parse_line!(reader, Atom));
+            atoms.push(parse_line!(reader, Atom<T>));
         }
 
         Ok(Snapshot {
@@ -48,7 +50,7 @@ impl<R: io::Read> Reader<R> {
 }
 
 impl<R: io::Read> Iterator for Reader<R> {
-    type Item = Snapshot;
+    type Item = Snapshot<f64>;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.read_snapshot().ok()
