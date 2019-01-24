@@ -9,6 +9,21 @@ pub struct Reader<R> {
     reader: io::BufReader<R>,
 }
 
+pub struct Snapshots<T, R> {
+    reader: Reader<R>,
+    _phantom: std::marker::PhantomData<T>,
+}
+
+impl<R: io::Read, T: std::str::FromStr<Err = std::num::ParseFloatError>> Iterator
+    for Snapshots<T, R>
+{
+    type Item = Snapshot<T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.reader.read_snapshot().ok()
+    }
+}
+
 macro_rules! parse_line {
     ($reader:ident) => {{
         let mut buffer = String::new();
@@ -29,6 +44,13 @@ impl<R: io::Read> Reader<R> {
         }
     }
 
+    pub fn snapshots<T>(self) -> Snapshots<T, R> {
+        Snapshots {
+            reader: self,
+            _phantom: std::marker::PhantomData,
+        }
+    }
+
     pub fn read_snapshot<T: std::str::FromStr<Err = std::num::ParseFloatError>>(
         &mut self,
     ) -> Result<Snapshot<T>> {
@@ -46,14 +68,6 @@ impl<R: io::Read> Reader<R> {
             comment: comment,
             atoms: atoms,
         })
-    }
-}
-
-impl<R: io::Read> Iterator for Reader<R> {
-    type Item = Snapshot<f64>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.read_snapshot().ok()
     }
 }
 
@@ -90,9 +104,10 @@ mod tests {
             C 1.1 1.9 2.8
             O 4.2 3.0 5.9
             H 5.0 1.6 4.0";
-        let mut reader = Reader::new(data);
-        assert!(reader.next().is_some());
-        assert!(reader.next().is_some());
-        assert!(reader.next().is_none());
+        let reader = Reader::new(data);
+        let mut snapshots: Snapshots<f64, _> = reader.snapshots();
+        assert!(snapshots.next().is_some());
+        assert!(snapshots.next().is_some());
+        assert!(snapshots.next().is_none());
     }
 }
