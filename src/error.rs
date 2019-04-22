@@ -1,11 +1,11 @@
 use std::io;
-use std::num;
+use std::num::{ParseFloatError, ParseIntError};
 use std::result;
 
 #[derive(Debug)]
 pub enum ParseError {
-    Integer(num::ParseIntError),
-    Float(num::ParseFloatError),
+    Integer(ParseIntError),
+    Float(ParseFloatError),
 }
 
 #[derive(Debug)]
@@ -21,14 +21,14 @@ impl From<io::Error> for Error {
     }
 }
 
-impl From<num::ParseIntError> for Error {
-    fn from(err: num::ParseIntError) -> Self {
+impl From<ParseIntError> for Error {
+    fn from(err: ParseIntError) -> Self {
         Error::Parse(ParseError::Integer(err))
     }
 }
 
-impl From<num::ParseFloatError> for Error {
-    fn from(err: num::ParseFloatError) -> Self {
+impl From<ParseFloatError> for Error {
+    fn from(err: ParseFloatError) -> Self {
         Error::Parse(ParseError::Float(err))
     }
 }

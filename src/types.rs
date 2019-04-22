@@ -1,4 +1,5 @@
 use crate::error::*;
+use std::num::ParseFloatError;
 use std::str::FromStr;
 use std::string::ToString;
 
@@ -23,7 +24,7 @@ impl<T> Atom<T> {
 
 impl<T> FromStr for Atom<T>
 where
-    T: FromStr<Err = std::num::ParseFloatError>,
+    T: FromStr<Err = ParseFloatError>,
 {
     type Err = Error;
 
