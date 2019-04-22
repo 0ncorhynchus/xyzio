@@ -13,14 +13,14 @@ impl<R: io::Write> Writer<R> {
         Writer { buffer: inner }
     }
 
-    pub fn write_snapshot<T: fmt::Display>(&mut self, snapshot: &Snapshot<T>) -> Result<()> {
-        self.buffer.write(snapshot.size().to_string().as_bytes())?;
-        self.buffer.write(b"\n")?;
-        self.buffer.write(snapshot.comment.as_bytes())?;
-        self.buffer.write(b"\n")?;
+    pub fn write_snapshot<T>(&mut self, snapshot: &Snapshot<T>) -> Result<()>
+    where
+        T: fmt::Display,
+    {
+        writeln!(self.buffer, "{}", snapshot.size())?;
+        writeln!(self.buffer, "{}", snapshot.comment)?;
         for atom in &snapshot.atoms {
-            self.buffer.write(format!("{}", atom).as_bytes())?;
-            self.buffer.write(b"\n")?;
+            writeln!(self.buffer, "{}", atom)?;
         }
         self.buffer.flush()?;
         Ok(())
