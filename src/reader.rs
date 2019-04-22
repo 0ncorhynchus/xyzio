@@ -14,8 +14,10 @@ pub struct Snapshots<T, R> {
     _phantom: std::marker::PhantomData<T>,
 }
 
-impl<R: io::Read, T: std::str::FromStr<Err = std::num::ParseFloatError>> Iterator
-    for Snapshots<T, R>
+impl<T, R> Iterator for Snapshots<T, R>
+where
+    T: std::str::FromStr<Err = std::num::ParseFloatError>,
+    R: io::Read,
 {
     type Item = Snapshot<T>;
 

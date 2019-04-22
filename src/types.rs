@@ -21,7 +21,10 @@ impl<T> Atom<T> {
     }
 }
 
-impl<T: FromStr<Err = std::num::ParseFloatError>> FromStr for Atom<T> {
+impl<T> FromStr for Atom<T>
+where
+    T: FromStr<Err = std::num::ParseFloatError>,
+{
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self> {
