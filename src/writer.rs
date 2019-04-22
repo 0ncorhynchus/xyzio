@@ -1,7 +1,7 @@
 use std::io;
 
-use error::*;
-use types::*;
+use crate::error::*;
+use crate::types::*;
 
 pub struct Writer<R> {
     buffer: R,

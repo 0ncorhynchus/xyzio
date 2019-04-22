@@ -2,8 +2,8 @@ use std::io;
 use std::io::prelude::BufRead;
 use std::iter::Iterator;
 
-use error::*;
-use types::*;
+use crate::error::*;
+use crate::types::*;
 
 pub struct Reader<R> {
     reader: io::BufReader<R>,
