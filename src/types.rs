@@ -60,6 +60,18 @@ impl<T> Snapshot<T> {
     }
 }
 
+impl<T: fmt::Display> fmt::Display for Snapshot<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "{}", self.size())?;
+        write!(f, "{}", self.comment)?;
+        for atom in &self.atoms {
+            writeln!(f, "")?;
+            write!(f, "{}", atom)?;
+        }
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

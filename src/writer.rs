@@ -17,11 +17,7 @@ impl<R: io::Write> Writer<R> {
     where
         T: fmt::Display,
     {
-        writeln!(self.buffer, "{}", snapshot.size())?;
-        writeln!(self.buffer, "{}", snapshot.comment)?;
-        for atom in &snapshot.atoms {
-            writeln!(self.buffer, "{}", atom)?;
-        }
+        writeln!(self.buffer, "{}", snapshot)?;
         self.buffer.flush()?;
         Ok(())
     }
