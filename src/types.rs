@@ -1,4 +1,5 @@
 use crate::error::*;
+use std::fmt;
 use std::num::ParseFloatError;
 use std::str::FromStr;
 use std::string::ToString;
@@ -42,15 +43,9 @@ where
     }
 }
 
-impl<T: ToString> ToString for Atom<T> {
-    fn to_string(&self) -> String {
-        let string_list = vec![
-            self.element.clone(),
-            self.x.to_string(),
-            self.y.to_string(),
-            self.z.to_string(),
-        ];
-        string_list.join(" ")
+impl<T: fmt::Display> fmt::Display for Atom<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} {} {} {}", self.element, self.x, self.y, self.z)
     }
 }
 

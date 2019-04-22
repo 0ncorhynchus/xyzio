@@ -2,6 +2,7 @@ use std::io;
 
 use crate::error::*;
 use crate::types::*;
+use std::fmt;
 
 pub struct Writer<R> {
     buffer: R,
@@ -12,13 +13,13 @@ impl<R: io::Write> Writer<R> {
         Writer { buffer: inner }
     }
 
-    pub fn write_snapshot<T: ToString>(&mut self, snapshot: &Snapshot<T>) -> Result<()> {
+    pub fn write_snapshot<T: fmt::Display>(&mut self, snapshot: &Snapshot<T>) -> Result<()> {
         self.buffer.write(snapshot.size().to_string().as_bytes())?;
         self.buffer.write(b"\n")?;
         self.buffer.write(snapshot.comment.as_bytes())?;
         self.buffer.write(b"\n")?;
         for atom in &snapshot.atoms {
-            self.buffer.write(atom.to_string().as_bytes())?;
+            self.buffer.write(format!("{}", atom).as_bytes())?;
             self.buffer.write(b"\n")?;
         }
         self.buffer.flush()?;
