@@ -108,4 +108,24 @@ mod tests {
         assert_eq!(Atom::new("O", 8.4, 12.8, 5.0), snapshot.atoms[1]);
         assert_eq!(Atom::new("H", 23.0, 9.0, 11.8), snapshot.atoms[2]);
     }
+
+    #[test]
+    fn test_format_snapshot() {
+        let snapshot = Snapshot {
+            comment: "This is a comment".to_string(),
+            atoms: vec![
+                Atom::new("C", 10.0, 11.0, 12.0),
+                Atom::new("O", 8.4, 12.8, 5.0),
+                Atom::new("H", 23.0, 9.0, 11.8),
+            ],
+        };
+        assert_eq!(
+            format!("{}", snapshot),
+            "3\n\
+             This is a comment\n\
+             C 10 11 12\n\
+             O 8.4 12.8 5\n\
+             H 23 9 11.8"
+        );
+    }
 }
