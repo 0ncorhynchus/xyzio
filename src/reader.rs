@@ -1,5 +1,4 @@
-use std::io;
-use std::io::prelude::BufRead;
+use std::io::{BufRead, BufReader, Read};
 use std::iter::Iterator;
 use std::num::ParseFloatError;
 
@@ -7,7 +6,7 @@ use crate::error::*;
 use crate::types::*;
 
 pub struct Reader<R> {
-    reader: io::BufReader<R>,
+    reader: BufReader<R>,
 }
 
 pub struct Snapshots<T, R> {
@@ -18,7 +17,7 @@ pub struct Snapshots<T, R> {
 impl<T, R> Iterator for Snapshots<T, R>
 where
     T: std::str::FromStr<Err = ParseFloatError>,
-    R: io::Read,
+    R: Read,
 {
     type Item = Snapshot<T>;
 
@@ -40,10 +39,10 @@ macro_rules! parse_line {
     }};
 }
 
-impl<R: io::Read> Reader<R> {
+impl<R: Read> Reader<R> {
     pub fn new(inner: R) -> Self {
         Reader {
-            reader: io::BufReader::new(inner),
+            reader: BufReader::new(inner),
         }
     }
 
