@@ -5,16 +5,12 @@ use std::num::ParseFloatError;
 use crate::error::*;
 use crate::types::*;
 
-pub struct Reader<R> {
+pub struct Reader<T, R> {
     reader: BufReader<R>,
-}
-
-pub struct Snapshots<T, R> {
-    reader: Reader<R>,
     _phantom: std::marker::PhantomData<T>,
 }
 
-impl<T, R> Iterator for Snapshots<T, R>
+impl<T, R> Iterator for Reader<T, R>
 where
     T: std::str::FromStr<Err = ParseFloatError>,
     R: Read,
@@ -22,48 +18,41 @@ where
     type Item = Snapshot<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.reader.read_snapshot().ok()
+        self.read_snapshot().ok()
     }
 }
 
 macro_rules! parse_line {
-    ($reader:ident) => {{
+    ($reader:expr) => {{
         let mut buffer = String::new();
         $reader.read_line(&mut buffer)?;
         buffer
     }};
-    ($reader:ident, $t:ty) => {{
+    ($reader:expr, $t:ty) => {{
         let mut buffer = String::new();
         $reader.read_line(&mut buffer)?;
         buffer.trim().parse::<$t>()?
     }};
 }
 
-impl<R: Read> Reader<R> {
+impl<T, R: Read> Reader<T, R> {
     pub fn new(inner: R) -> Self {
         Reader {
             reader: BufReader::new(inner),
-        }
-    }
-
-    pub fn snapshots<T>(self) -> Snapshots<T, R> {
-        Snapshots {
-            reader: self,
             _phantom: std::marker::PhantomData,
         }
     }
 
-    pub fn read_snapshot<T: std::str::FromStr<Err = std::num::ParseFloatError>>(
-        &mut self,
-    ) -> Result<Snapshot<T>> {
-        let reader = &mut self.reader;
-
-        let num_atoms = parse_line!(reader, i32);
-        let comment = parse_line!(reader);
+    pub fn read_snapshot(&mut self) -> Result<Snapshot<T>>
+    where
+        T: std::str::FromStr<Err = std::num::ParseFloatError>,
+    {
+        let num_atoms = parse_line!(self.reader, i32);
+        let comment = parse_line!(self.reader);
 
         let mut atoms: Vec<Atom<T>> = Vec::new();
         for _ in 0..num_atoms {
-            atoms.push(parse_line!(reader, Atom<T>));
+            atoms.push(parse_line!(self.reader, Atom<T>));
         }
 
         Ok(Snapshot {
@@ -85,8 +74,8 @@ mod tests {
             C 1.0 2.0 3.0
             O 4.0 3.0 6.0
             H 5.0 1.5 4.0";
-        let mut reader = Reader::new(data);
-        let success = reader.read_snapshot::<f64>();
+        let mut reader: Reader<f64, _> = Reader::new(data);
+        let success = reader.read_snapshot();
         assert!(success.is_ok());
 
         let snapshot = success.unwrap();
@@ -106,10 +95,9 @@ mod tests {
             C 1.1 1.9 2.8
             O 4.2 3.0 5.9
             H 5.0 1.6 4.0";
-        let reader = Reader::new(data);
-        let mut snapshots: Snapshots<f64, _> = reader.snapshots();
-        assert!(snapshots.next().is_some());
-        assert!(snapshots.next().is_some());
-        assert!(snapshots.next().is_none());
+        let mut reader: Reader<f64, _> = Reader::new(data);
+        assert!(reader.next().is_some());
+        assert!(reader.next().is_some());
+        assert!(reader.next().is_none());
     }
 }
