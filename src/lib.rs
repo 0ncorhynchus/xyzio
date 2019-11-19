@@ -6,7 +6,7 @@ mod writer;
 pub use error::*;
 
 pub use types::Atom;
-pub use types::Snapshot;
+pub use types::Frame;
 
 pub use reader::Reader;
 

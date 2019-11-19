@@ -49,18 +49,18 @@ impl<T: fmt::Display> fmt::Display for Atom<T> {
     }
 }
 
-pub struct Snapshot<T> {
+pub struct Frame<T> {
     pub comment: String,
     pub atoms: Vec<Atom<T>>,
 }
 
-impl<T> Snapshot<T> {
+impl<T> Frame<T> {
     pub fn size(&self) -> usize {
         self.atoms.len()
     }
 }
 
-impl<T: fmt::Display> fmt::Display for Snapshot<T> {
+impl<T: fmt::Display> fmt::Display for Frame<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "{}", self.size())?;
         write!(f, "{}", self.comment)?;
@@ -94,7 +94,7 @@ mod tests {
 
     #[test]
     fn test_snapshot() {
-        let snapshot = Snapshot {
+        let frame = Frame {
             comment: "This is a comment".to_string(),
             atoms: vec![
                 Atom::new("C", 10.0, 11.0, 12.0),
@@ -102,16 +102,16 @@ mod tests {
                 Atom::new("H", 23.0, 9.0, 11.8),
             ],
         };
-        assert_eq!(3, snapshot.size());
-        assert_eq!("This is a comment", snapshot.comment);
-        assert_eq!(Atom::new("C", 10.0, 11.0, 12.0), snapshot.atoms[0]);
-        assert_eq!(Atom::new("O", 8.4, 12.8, 5.0), snapshot.atoms[1]);
-        assert_eq!(Atom::new("H", 23.0, 9.0, 11.8), snapshot.atoms[2]);
+        assert_eq!(3, frame.size());
+        assert_eq!("This is a comment", frame.comment);
+        assert_eq!(Atom::new("C", 10.0, 11.0, 12.0), frame.atoms[0]);
+        assert_eq!(Atom::new("O", 8.4, 12.8, 5.0), frame.atoms[1]);
+        assert_eq!(Atom::new("H", 23.0, 9.0, 11.8), frame.atoms[2]);
     }
 
     #[test]
     fn test_format_snapshot() {
-        let snapshot = Snapshot {
+        let frame = Frame {
             comment: "This is a comment".to_string(),
             atoms: vec![
                 Atom::new("C", 10.0, 11.0, 12.0),
@@ -120,7 +120,7 @@ mod tests {
             ],
         };
         assert_eq!(
-            format!("{}", snapshot),
+            format!("{}", frame),
             "3\n\
              This is a comment\n\
              C 10 11 12\n\

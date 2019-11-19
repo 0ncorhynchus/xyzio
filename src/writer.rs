@@ -13,11 +13,11 @@ impl<R: io::Write> Writer<R> {
         Writer { buffer: inner }
     }
 
-    pub fn write_snapshot<T>(&mut self, snapshot: &Snapshot<T>) -> Result<()>
+    pub fn write_snapshot<T>(&mut self, frame: &Frame<T>) -> Result<()>
     where
         T: fmt::Display,
     {
-        writeln!(self.buffer, "{}", snapshot)?;
+        writeln!(self.buffer, "{}", frame)?;
         self.buffer.flush()?;
         Ok(())
     }
@@ -32,7 +32,7 @@ mod tests {
         let mut buffer: Vec<u8> = vec![];
         {
             let mut writer = Writer::new(&mut buffer);
-            let result = writer.write_snapshot(&Snapshot {
+            let result = writer.write_snapshot(&Frame {
                 comment: "comment".to_string(),
                 atoms: vec![
                     Atom::new("C", 10.2, 13.4, 8.9),
