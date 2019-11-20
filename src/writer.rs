@@ -32,14 +32,14 @@ mod tests {
         let mut buffer: Vec<u8> = vec![];
         {
             let mut writer = Writer::new(&mut buffer);
-            let result = writer.write_snapshot(&Frame {
-                comment: "comment".to_string(),
-                atoms: vec![
+            let result = writer.write_snapshot(&Frame::new(
+                "comment".to_string(),
+                vec![
                     Atom::new("C", [10.2, 13.4, 8.9]),
                     Atom::new("N", [3.1, 10.8, 13.6]),
                     Atom::new("H", [5.7, 13.4, 4.6]),
                 ],
-            });
+            ));
             assert!(result.is_ok());
         }
         let string = String::from_utf8(buffer);

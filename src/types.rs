@@ -74,21 +74,33 @@ where
 }
 
 pub struct Frame<T> {
-    pub comment: String,
-    pub atoms: Vec<Atom<T>>,
+    comment: String,
+    atoms: Vec<Atom<T>>,
 }
 
 impl<T> Frame<T> {
+    pub fn new(comment: String, atoms: Vec<Atom<T>>) -> Self {
+        Self { comment, atoms }
+    }
+
     pub fn size(&self) -> usize {
         self.atoms.len()
+    }
+
+    pub fn comment(&self) -> &str {
+        &self.comment
+    }
+
+    pub fn atoms(&self) -> &Vec<Atom<T>> {
+        &self.atoms
     }
 }
 
 impl<T: fmt::Display> fmt::Display for Frame<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "{}", self.size())?;
-        write!(f, "{}", self.comment)?;
-        for atom in &self.atoms {
+        write!(f, "{}", self.comment())?;
+        for atom in self.atoms() {
             writeln!(f, "")?;
             write!(f, "{}", atom)?;
         }
@@ -118,14 +130,14 @@ mod tests {
 
     #[test]
     fn test_snapshot() {
-        let frame = Frame {
-            comment: "This is a comment".to_string(),
-            atoms: vec![
+        let frame = Frame::new(
+            "This is a comment".to_string(),
+            vec![
                 Atom::new("C", [10.0, 11.0, 12.0]),
                 Atom::new("O", [8.4, 12.8, 5.0]),
                 Atom::new("H", [23.0, 9.0, 11.8]),
             ],
-        };
+        );
         assert_eq!(3, frame.size());
         assert_eq!("This is a comment", frame.comment);
         assert_eq!(Atom::new("C", [10.0, 11.0, 12.0]), frame.atoms[0]);
@@ -135,14 +147,14 @@ mod tests {
 
     #[test]
     fn test_format_snapshot() {
-        let frame = Frame {
-            comment: "This is a comment".to_string(),
-            atoms: vec![
+        let frame = Frame::new(
+            "This is a comment".to_string(),
+            vec![
                 Atom::new("C", [10.0, 11.0, 12.0]),
                 Atom::new("O", [8.4, 12.8, 5.0]),
                 Atom::new("H", [23.0, 9.0, 11.8]),
             ],
-        };
+        );
         assert_eq!(
             format!("{}", frame),
             "3\n\

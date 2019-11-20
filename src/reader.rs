@@ -55,10 +55,7 @@ impl<T, R: Read> Reader<T, R> {
             atoms.push(parse_line!(self.reader, Atom<T>));
         }
 
-        Ok(Frame {
-            comment: comment,
-            atoms: atoms,
-        })
+        Ok(Frame::new(comment, atoms))
     }
 }
 
