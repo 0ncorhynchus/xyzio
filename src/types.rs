@@ -4,6 +4,24 @@ use std::num::ParseFloatError;
 use std::str::FromStr;
 use std::string::ToString;
 
+pub trait Coordinate {
+    type Scalar;
+    fn from_array(array: [Self::Scalar; 3]) -> Self;
+    fn as_array(&self) -> [&Self::Scalar; 3];
+}
+
+impl<T> Coordinate for [T; 3] {
+    type Scalar = T;
+
+    fn from_array(array: [Self::Scalar; 3]) -> Self {
+        array
+    }
+
+    fn as_array(&self) -> [&Self::Scalar; 3] {
+        [&self[0], &self[1], &self[2]]
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct AtomBase<T> {
     pub element: String,
@@ -21,9 +39,10 @@ impl<T> AtomBase<T> {
     }
 }
 
-impl<T> FromStr for Atom<T>
+impl<T, S> FromStr for AtomBase<T>
 where
-    T: FromStr<Err = ParseFloatError>,
+    T: Coordinate<Scalar = S>,
+    S: FromStr<Err = ParseFloatError>,
 {
     type Err = Error;
 
@@ -32,24 +51,25 @@ where
         if splitted.len() != 4 {
             return Err(Error::IllegalState(String::from("")));
         }
-        Ok(Atom::new(
+        Ok(AtomBase::new(
             splitted[0],
-            [
+            T::from_array([
                 splitted[1].parse()?,
                 splitted[2].parse()?,
                 splitted[3].parse()?,
-            ],
+            ]),
         ))
     }
 }
 
-impl<T: fmt::Display> fmt::Display for Atom<T> {
+impl<T, S> fmt::Display for AtomBase<T>
+where
+    T: Coordinate<Scalar = S>,
+    S: fmt::Display,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{} {} {} {}",
-            self.element, self.position[0], self.position[1], self.position[2]
-        )
+        let [x, y, z] = self.position.as_array();
+        write!(f, "{} {} {} {}", self.element, x, y, z)
     }
 }
 
