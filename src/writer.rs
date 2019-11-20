@@ -35,9 +35,9 @@ mod tests {
             let result = writer.write_snapshot(&Frame {
                 comment: "comment".to_string(),
                 atoms: vec![
-                    Atom::new("C", 10.2, 13.4, 8.9),
-                    Atom::new("N", 3.1, 10.8, 13.6),
-                    Atom::new("H", 5.7, 13.4, 4.6),
+                    Atom::new("C", [10.2, 13.4, 8.9]),
+                    Atom::new("N", [3.1, 10.8, 13.6]),
+                    Atom::new("H", [5.7, 13.4, 4.6]),
                 ],
             });
             assert!(result.is_ok());

@@ -12,11 +12,11 @@ pub struct AtomBase<T> {
 
 pub type Atom<T> = AtomBase<[T; 3]>;
 
-impl<T> Atom<T> {
-    pub fn new(element: &str, x: T, y: T, z: T) -> Self {
-        Atom {
+impl<T> AtomBase<T> {
+    pub fn new(element: &str, position: T) -> Self {
+        AtomBase {
             element: element.to_string(),
-            position: [x, y, z],
+            position,
         }
     }
 }
@@ -34,9 +34,11 @@ where
         }
         Ok(Atom::new(
             splitted[0],
-            splitted[1].parse()?,
-            splitted[2].parse()?,
-            splitted[3].parse()?,
+            [
+                splitted[1].parse()?,
+                splitted[2].parse()?,
+                splitted[3].parse()?,
+            ],
         ))
     }
 }
@@ -82,7 +84,7 @@ mod tests {
     fn test_parse_atom() {
         let success = "C 10.0 11.0 12.0".parse();
         assert!(success.is_ok());
-        assert_eq!(Atom::new("C", 10.0, 11.0, 12.0), success.unwrap());
+        assert_eq!(Atom::new("C", [10.0, 11.0, 12.0]), success.unwrap());
 
         let failure: Result<Atom<f64>> = "C 1.0 2.0 a".parse();
         assert!(failure.is_err());
@@ -90,7 +92,7 @@ mod tests {
 
     #[test]
     fn test_atom_to_string() {
-        let atom = Atom::new("C", 11.2, 8.5, 14.8);
+        let atom = Atom::new("C", [11.2, 8.5, 14.8]);
         assert_eq!("C 11.2 8.5 14.8", atom.to_string());
     }
 
@@ -99,16 +101,16 @@ mod tests {
         let frame = Frame {
             comment: "This is a comment".to_string(),
             atoms: vec![
-                Atom::new("C", 10.0, 11.0, 12.0),
-                Atom::new("O", 8.4, 12.8, 5.0),
-                Atom::new("H", 23.0, 9.0, 11.8),
+                Atom::new("C", [10.0, 11.0, 12.0]),
+                Atom::new("O", [8.4, 12.8, 5.0]),
+                Atom::new("H", [23.0, 9.0, 11.8]),
             ],
         };
         assert_eq!(3, frame.size());
         assert_eq!("This is a comment", frame.comment);
-        assert_eq!(Atom::new("C", 10.0, 11.0, 12.0), frame.atoms[0]);
-        assert_eq!(Atom::new("O", 8.4, 12.8, 5.0), frame.atoms[1]);
-        assert_eq!(Atom::new("H", 23.0, 9.0, 11.8), frame.atoms[2]);
+        assert_eq!(Atom::new("C", [10.0, 11.0, 12.0]), frame.atoms[0]);
+        assert_eq!(Atom::new("O", [8.4, 12.8, 5.0]), frame.atoms[1]);
+        assert_eq!(Atom::new("H", [23.0, 9.0, 11.8]), frame.atoms[2]);
     }
 
     #[test]
@@ -116,9 +118,9 @@ mod tests {
         let frame = Frame {
             comment: "This is a comment".to_string(),
             atoms: vec![
-                Atom::new("C", 10.0, 11.0, 12.0),
-                Atom::new("O", 8.4, 12.8, 5.0),
-                Atom::new("H", 23.0, 9.0, 11.8),
+                Atom::new("C", [10.0, 11.0, 12.0]),
+                Atom::new("O", [8.4, 12.8, 5.0]),
+                Atom::new("H", [23.0, 9.0, 11.8]),
             ],
         };
         assert_eq!(
