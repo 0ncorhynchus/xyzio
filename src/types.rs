@@ -5,20 +5,18 @@ use std::str::FromStr;
 use std::string::ToString;
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct Atom<T> {
+pub struct AtomBase<T> {
     pub element: String,
-    pub x: T,
-    pub y: T,
-    pub z: T,
+    pub position: T,
 }
+
+pub type Atom<T> = AtomBase<[T; 3]>;
 
 impl<T> Atom<T> {
     pub fn new(element: &str, x: T, y: T, z: T) -> Self {
         Atom {
             element: element.to_string(),
-            x: x,
-            y: y,
-            z: z,
+            position: [x, y, z],
         }
     }
 }
@@ -45,7 +43,11 @@ where
 
 impl<T: fmt::Display> fmt::Display for Atom<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} {} {} {}", self.element, self.x, self.y, self.z)
+        write!(
+            f,
+            "{} {} {} {}",
+            self.element, self.position[0], self.position[1], self.position[2]
+        )
     }
 }
 
